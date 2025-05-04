@@ -17,10 +17,10 @@ class Station
   end
 
   def trains_type 
-    passenger_trains = @trains.count {|trains| train.type == 'passenger'}
-    cargo_trains = @trains.count {|trains| train.type == 'cargo'}
+    passenger_trains = @trains.count {|trains| trains.type == 'passenger'}
+    cargo_trains = @trains.count {|trains| trains.type == 'cargo'}
 
-    puts {'Passengers trains: #{passenger_trains}, Cargo trains: #{cargo_trains}'}
+    puts "Passengers trains: #{passenger_trains}, Cargo trains: #{cargo_trains}"
     
     return passenger_trains, cargo_trains
 
@@ -34,24 +34,24 @@ end
 
 
 class Route
-  attr_reader :first_station, :last_station
+  attr_reader :first_station, :last_station, :route
 
   def initialize(first_station, last_station)
     @first_station = first_station
     @last_station = last_station
-    @stations = []
+    @route = [@first_station, @last_station]
   end  
 
   def add_station(station)
-    @stations.insert(-1, station)
+    @route.insert(-2, station)
   end
 
   def delete_station(station)
-    @stations.delete(station)
+    @route.delete(station)
   end
 
-  def route_list
-    @list = [@first_station, @stations, @last_station]
+  def list
+    @route 
   end
 
 end
@@ -97,20 +97,25 @@ class Train
   end
 
   def add_route(route)
-    route.route_list
-    @current_station = route.first_station
+    @route = route
+    @current_station = route.list.first
   end  
 
   def move_to_next
-    @current
+    @index = @route.list.index(@current_station)
+    @current_station = @route.list[@index + 1] if @index < @route.list.size - 1
   end  
   
   def move_to_previous
-
+    @index = @route.list.index(@current_station)
+    @current_station = @route.list[@index - 1] if @index < @route.list.size - 1
   end  
   
-  def current_station
-
+  def previous_current_next
+    @index = @route.list.index(@current_station)
+    previous_st = @route.list[@index - 1]
+    next_st = @route.list[@index + 1]
+    puts "Previous station: #{previous_st}, Current station: #{current_station}, Next station: #{next_st}"
   end  
 
 end
