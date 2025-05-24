@@ -1,5 +1,5 @@
 class Train
-  attr_accessor :speed
+  attr_accessor :speed, :number
   attr_reader :type, :wagons
 
 
@@ -37,25 +37,35 @@ class Train
   end
 
   def add_route(route)
-    @route = route
-    @current_station = route.list.first
+    @stations = route
+    @current_st_index = 0
+    current_station.add_trains(self)
   end  
 
+  def current_station
+    @stations.stations[@current_st_index] if @stations
+  end
+
   def move_to_next
-    @index = @route.list.index(@current_station)
-    @current_station = @route.list[@index + 1] if @index < @route.list.size - 1
+    return if @current_st_index == @stations.stations.length - 1
+    current_station.delete_train(self)
+    @current_st_index += 1
+    current_station.add_trains(self)
   end  
   
   def move_to_previous
-    @index = @route.list.index(@current_station)
-    @current_station = @route.list[@index - 1] if @index < @route.list.size - 1
+    return if @current_st_index == @stations.stations.length - 1
+    current_station.delete_train(self)
+    @current_st_index -= 1
+    current_station.add_trains(self)
   end  
   
   def previous_current_next
-    @index = @route.list.index(@current_station)
-    previous_st = @route.list[@index - 1]
-    next_st = @route.list[@index + 1]
-    puts "Previous station: #{previous_st}, Current station: #{current_station}, Next station: #{next_st}"
+    index = @current_st_index
+    previous_st = index > 0 ? @stations.list[index - 1] : "none"
+    current_st = current_station.name
+    next_st = index < @stations.length - 1 ? @stations.stations[index + 1] : "none"
+    puts "Previous station: #{previous_st}, Current station: #{current_st}, Next station: #{next_st}"
   end  
 
 end

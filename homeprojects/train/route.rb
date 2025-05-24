@@ -1,23 +1,24 @@
 class Route
-  attr_reader :first_station, :last_station, :route
+  attr_reader :first_station, :last_station, :stations
+  attr_accessor :number
 
   def initialize(number, first_station, last_station)
     @number = number
-    @first_station = first_station
-    @last_station = last_station
-    @route = [@first_station, @last_station]
+    @stations = [first_station, last_station]
   end
 
   def add_station(station)
-    @route.insert(-2, station)
+    @stations.insert(-2, station)
   end
 
   def delete_station(station)
-    @route.delete(station)
+    if station != @stations.first && station != @stations.last
+      @stations.delete(station)
+    end
   end
 
   def list
-    @route
+    @stations
   end
 
 end

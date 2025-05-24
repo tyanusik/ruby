@@ -1,143 +1,166 @@
 require_relative 'train'
 require_relative 'station'
 require_relative 'route'
-require_relative '*passenger_train'
+require_relative 'passenger_train'
 require_relative 'cargo_train'
+require_relative 'wagon'
+require_relative 'cargo_wagon'
+require_relative 'passenger_wagon'
+
+def list_with_index(array)
+  array.each_with_index {|item, index| puts "#{index + 1}. #{block_given?? yield(item) : item}"}
+end
+
+def choose_from(array)
+  list_with_index(array) { |item| item.respond_to?(:name) ? item.name : item.number }
+  index = gets.chomp.to_i - 1
+  array[index] if index.between?(0, array.length - 1)
+end
 
 stations = []
 trains = []
 routes = []
 
 loop do
-  puts "1) Add a station"
-  puts "2) Add a route"
-  puts "3) Add a train"
-  puts "4) Show stations list"
+  puts "\nMain Menu:"
+  puts "1) Manage stations"
+  puts "2) Manage routes"
+  puts "3) Manage trains"
+  puts "4) Exit"
 
-  input = gets.chomp.to_i
-
-  case input
+  case gets.chomp.to_i
   when 1
-    puts "Print station's name"
-    name = gets.chomp
-    stations << Station.new(name)
+    puts "1) Add a station"
+    puts "2) Show all stations"
+    input = gets.chomp.to_i
+    if input == 1
+      puts "Print station's name"
+      name = gets.chomp
+      stations << Station.new(name)
+      puts "Station #{name} is added"
+    elsif input == 2
+      puts "Stations:"
+      list_with_index(stations, &:name)
+    end
 
   when 2
-    puts "Print route's number"
-    number = gets.chomp
+    puts "1) Create a route"
+    puts "2) Edit a route"
+    puts "3) Show all routes"
 
-    puts "Add first station to the route"
-    if stations.include?(gets.chomp)
-      first_station = gets.chomp
-    end
+    input = gets.chomp.to_i
+    if input == 1
+      puts "Print route's number"
+      number = gets.chomp.to_i
+      puts "Add first station to the route"
+      first_station = choose_from(stations)
 
-    puts "Add last station to the route"
-    if stations.include?(gets.chomp)
-      last_station = gets.chomp
-    end
-    routes << Route.new(number, first_station, last_station)
+      puts "Add last station to the route"
+      last_station = choose_from(stations)
 
-    puts "Do you want to change the route's station?"
-    if gets.chomp == "yes"
-      puts "1) Add a station"
-      puts "2) Delete a station"
-      answer = gets.chomp.to_i
+      if first_station && last_station
+        routes << Route.new(number, first_station, last_station)
+        puts "Route #{number} is created"
+      end
 
-      if answer == 1
-        puts "Enter the station's name"
-        name = gets.chomp
-        if stations.include?(name)
-          routes.add_station(name)
-        elsif
-          puts "That station doesn't exist"
+    elsif input == 2
+      puts "Select route to edit:"
+      route = choose_from(routes)
+      if route
+        puts "You choose #{route.number}"
+        puts "1) Add a station"
+        puts "2) Delete a station"
+
+        input = gets.chomp.to_i - 1
+        if input == 1
+          puts "Select station to add:"
+          station = choose_from(stations)
+          route.add_station(station) if station
+        elsif input == 2
+          puts "Select station to delete:"
+          station = choose_from(route.stations[1..-2])
+          route.delete_station(station) if station
         end
       end
 
-      if answer == 2
-        puts "Enter the station's name"
-        name = gets.chomp
-        if stations.include?(name)
-          routes.delete_station(name)
-        elsif
-        puts "That station doesn't exist"
-        end
+    elsif input == 3
+      routes.each_with_index do |r, i|
+        puts "#{i+1}) #{r.number}: #{r.stations.map(&:name).join(" -> ")}"
       end
-
-    elsif gets.chomp == "no"
-      break
     end
 
 
   when 3
-    puts "Print train's name"
-    name = gets.chomp
-    puts "Print train type: passenger or cargo"
-    type = gets.chomp
-    if type == "passenger"
-      trains << PassengerTrain.new(name, type)
-    else
-      trains << CargoTrain.new(name, type)
-    end
+    puts "1) Create a train"
+    puts "2) Assign a route to a train"
+    puts "3) Manage wagons"
+    puts "4) Move train"
+    puts "5) Show all trains"
 
-    puts "Do you want to add route to the train?"
-    answer = gets.chomp
-    if answer == "yes"
-      puts "Enter the number of the route of the list"
-      print(routes.length)
-      route_number = gets.chomp.to_i
-      trains.add_route(route_number)
+    input = gets.chomp.to_i
 
-      puts "Do you want to continue in the train menu?"
-      answer = gets.chomp
-      if answer == "yes"
-        puts "1) Add a wagon"
-        puts "2) Delete a wagon"
-        answer = gets.chomp.to_i
-        if answer == 1
-          puts "Enter the type of the wagon"
-          wagon = gets.chomp
-          if trains.type == 'passenger' && wagon.passenger
-            trains.add_wagon(wagon)
-          elsif
-            trains.type == 'cargo' && wagon.cargo
-            trains.add_wagon(wagon)
-          end
-        elsif answer == 2
-          puts "Enter the number of the wagon"
-          wagon = gets.chomp.to_i
-          trains.delete_wagon(wagon)
+    if input == 1
+      puts "Print train's number"
+      number = gets.chomp.to_i
+      puts "Print train type: passenger or cargo"
+      type = gets.chomp
+      type == "passenger" ? trains << PassengerTrain.new(number, type) : trains << CargoTrain.new(number, type)
+
+    elsif input == 2
+      puts "Select a train:"
+      train = choose_from(trains)
+      puts "Select a route:"
+      route = choose_from(routes)
+      train.add_route(route) if route
+      puts "The #{route.number} was added to the train #{train.number}"
+      current_station = train.current_station
+      puts "Current station is #{current_station}"
+
+    elsif input == 3
+      puts "Select a train:"
+      train = choose_from(trains)
+      puts "1) Add a wagon"
+      puts "2) Delete a wagon"
+      input = gets.chomp.to_i
+
+      if input == 1
+        if train.type == 'passenger'
+          wagon = PassengerWagon.new(train.type)
+          train.add_wagon(wagon)
+        elsif train.type == 'cargo'
+          wagon = CargoWagon.new(train.type)
+          train.add_wagon(wagon)
         end
+      elsif input == 2
+        train.delete_wagon(wagon)
       end
 
-      puts "Do you want to move the train?"
-      answer = gets.chomp
-      if answer == "yes"
-        puts "1) Move forward"
-        puts "2) Move backward"
-        answer = gets.chomp.to_i
-        if answer == 1
-          trains.move_to_next
-        end
-        if answer == 2
-          trains.move_to_previous
-        end
-      elsif answer == "no"
-        break
+    elsif input == 4
+      puts "Select a train:"
+      train = choose_from(trains)
+      puts "1) Move forward"
+      puts "2) Move backward"
+      input = gets.chomp.to_i
+      if input == 1
+        train.move_to_next
+        puts "Current station is #{current_station}"
+      end
+      if input == 2
+        train.move_to_previous
+        puts "Current station is #{current_station}"
       end
 
-
-    elsif answer == "no"
-      break
+    elsif input == 5
+      list_with_index(trains)
     end
+
 
   when 4
-    puts stations
+    puts "Exiting..."
+    break
 
   else
-    # type code here
+    puts "Invalid option. Try again."
   end
-
-
-  break if input.nil?
 
 end
