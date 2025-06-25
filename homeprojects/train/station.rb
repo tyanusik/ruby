@@ -6,10 +6,23 @@ class Station
   attr_reader :trains
   attr_accessor :name
 
+  NAME_FORMAT = /^\D$/.freeze
+
   def initialize(name)
     @name = name
     @trains = []
-    super
+    register_instance
+  end
+
+  def validate!
+    raise "Station name can't be nil" if name.nil?
+    raise 'Station name has invalid format' if name !~ NAME_FORMAT
+
+    true
+  end
+
+  def valid?
+    validate!
   end
 
   def self.all

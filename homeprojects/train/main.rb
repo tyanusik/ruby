@@ -9,18 +9,6 @@ require_relative 'wagon'
 require_relative 'cargo_wagon'
 require_relative 'passenger_wagon'
 
-module Modules
-  def company_name(name)
-    self.company = name
-  end
-
-  def company
-    company
-  end
-
-  attr_accessor :company
-end
-
 def list_with_index(array)
   array.each_with_index { |item, index| puts "#{index + 1}. #{block_given? ? yield(item) : item}" }
 end
@@ -119,7 +107,10 @@ loop do
       number = gets.chomp.to_i
       puts 'Print train type: passenger or cargo'
       type = gets.chomp
-      trains << (type == 'passenger' ? PassengerTrain.new(number, type) : CargoTrain.new(number, type))
+      if number(~ NUMBER_FORMAT) && type(~ TYPE_FORMAT)
+        trains << (type == 'passenger' ? PassengerTrain.new(number, type) : CargoTrain.new(number, type))
+        puts "Train #{number} is created"
+      end
 
     when 2
       puts 'Select a train:'

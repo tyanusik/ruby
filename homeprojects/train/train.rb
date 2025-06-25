@@ -4,8 +4,12 @@ require_relative 'modules'
 
 class Train
   include InstanceCounter
+  include Company
   attr_accessor :speed, :number
   attr_reader :type, :wagons
+
+  TYPE_FORMAT = /^\D$/.freeze
+  NUMBER_FORMAT = /^\w{3}-?\w{2}$/.freeze
 
   class << self
     attr_accessor :trains
@@ -14,12 +18,25 @@ class Train
   self.trains = []
   # @@trains = []
 
-  def initialize(number, type)
+  def initialize(number, type, company)
     @number = number
     @type = type
     @wagons = []
     self.class.trains << self
-    super
+    register_instance
+    self.company_name = company
+  end
+
+  def validate!
+    raise "Number can't be nil" if number.nil?
+    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
+    raise "Type can't be nil" if type.nil?
+
+    true
+  end
+
+  def valid?
+    validate!
   end
 
   def self.find(number)
@@ -30,7 +47,7 @@ class Train
     type
   end
 
-  def speed
+  def initial_speed
     @speed = 0
   end
 
