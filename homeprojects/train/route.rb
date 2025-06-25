@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'modules/instance_counter'
+
 class Route
   include InstanceCounter
   attr_reader :first_station, :last_station, :stations
@@ -11,6 +13,7 @@ class Route
     @number = number
     @stations = [first_station, last_station]
     register_instance
+    valid?
   end
 
   def validate!

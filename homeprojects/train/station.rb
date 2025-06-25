@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'modules/instance_counter'
+
 class Station
   include InstanceCounter
 
@@ -12,6 +14,7 @@ class Station
     @name = name
     @trains = []
     register_instance
+    valid?
   end
 
   def validate!

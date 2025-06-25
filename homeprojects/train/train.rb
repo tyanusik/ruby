@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'modules'
+require_relative 'modules/instance_counter'
+require_relative 'modules/company'
 
 class Train
   include InstanceCounter
@@ -8,23 +9,24 @@ class Train
   attr_accessor :speed, :number
   attr_reader :type, :wagons
 
-  TYPE_FORMAT = /^\D$/.freeze
-  NUMBER_FORMAT = /^\w{3}-?\w{2}$/.freeze
+  TYPE_FORMAT = /^\D$/
+  NUMBER_FORMAT = /^[a-zа-яё\d]{3}(-?)[a-zа-яё\d]{2}$/i
 
   class << self
     attr_accessor :trains
   end
-
   self.trains = []
   # @@trains = []
 
   def initialize(number, type, company)
-    @number = number
+    @number = number.to_s
     @type = type
     @wagons = []
+    pp self.class.trains
     self.class.trains << self
-    register_instance
+    super
     self.company_name = company
+    valid?
   end
 
   def validate!

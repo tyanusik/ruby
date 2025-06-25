@@ -104,13 +104,19 @@ loop do
     case input
     when 1
       puts "Print train's number"
-      number = gets.chomp.to_i
+      number = gets.chomp
       puts 'Print train type: passenger or cargo'
       type = gets.chomp
-      if number(~ NUMBER_FORMAT) && type(~ TYPE_FORMAT)
-        trains << (type == 'passenger' ? PassengerTrain.new(number, type) : CargoTrain.new(number, type))
-        puts "Train #{number} is created"
-      end
+      puts 'Print train company'
+      company = gets.chomp
+      raise 'The data is invalid. Try again' unless number || type || company
+
+      trains << (if type == 'passenger'
+                   PassengerTrain.new(number, type, company)
+                 else
+                   CargoTrain.new(number, type, company)
+                 end)
+      puts "Train #{number} is created"
 
     when 2
       puts 'Select a train:'
