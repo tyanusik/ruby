@@ -103,13 +103,20 @@ loop do
 
     case input
     when 1
-      puts "Print train's number"
-      number = gets.chomp
-      puts 'Print train type: passenger or cargo'
-      type = gets.chomp
-      puts 'Print train company'
-      company = gets.chomp
-      raise 'The data is invalid. Try again' unless number || type || company
+      attempt = 0
+      begin
+        puts "Print train's number"
+        number = gets.chomp
+        puts 'Print train type: passenger or cargo'
+        type = gets.chomp
+        puts 'Print train company'
+        company = gets.chomp
+      rescue RuntimeError
+        attempt += 1
+        puts 'Reload the app and try again' unless attempt < 3
+      ensure
+        puts 'retry'
+      end
 
       trains << (if type == 'passenger'
                    PassengerTrain.new(number, type, company)
@@ -137,10 +144,10 @@ loop do
 
       if input == 1
         if train.type == 'passenger'
-          wagon = PassengerWagon.new(train.type)
+          wagon = PassengerWagon.new(train.type, train.company)
           train.add_wagon(wagon)
         elsif train.type == 'cargo'
-          wagon = CargoWagon.new(train.type)
+          wagon = CargoWagon.new(train.type, train.company)
           train.add_wagon(wagon)
         end
       elsif input == 2
@@ -164,6 +171,8 @@ loop do
 
     when 5
       list_with_index(trains)
+    else
+      # type code here
     end
 
   when 4
