@@ -107,23 +107,28 @@ loop do
       begin
         puts "Print train's number"
         number = gets.chomp
+
         puts 'Print train type: passenger or cargo'
         type = gets.chomp
         puts 'Print train company'
         company = gets.chomp
-      rescue RuntimeError
-        attempt += 1
-        puts 'Reload the app and try again' unless attempt < 3
-      ensure
-        puts 'retry'
-      end
 
-      trains << (if type == 'passenger'
-                   PassengerTrain.new(number, type, company)
-                 else
-                   CargoTrain.new(number, type, company)
-                 end)
-      puts "Train #{number} is created"
+        temp_train = Train.new(number, type, company)
+        temp_train.validate!
+
+        trains << (if type == 'passenger'
+                     PassengerTrain.new(number, type, company)
+                   else
+                     CargoTrain.new(number, type, company)
+                   end)
+        puts "Train #{number} is created"
+      rescue RuntimeError => e
+        puts "Error: #{e.message}"
+        attempt += 1
+        retry if attempt < 3
+      ensure
+        puts "There was #{attempt} attempts"
+      end
 
     when 2
       puts 'Select a train:'

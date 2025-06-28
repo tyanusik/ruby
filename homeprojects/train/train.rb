@@ -39,6 +39,8 @@ class Train
 
   def valid?
     validate!
+  rescue StandardError
+    false
   end
 
   def self.find(number)
