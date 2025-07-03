@@ -2,6 +2,8 @@
 
 require_relative 'modules/instance_counter'
 require_relative 'modules/company'
+require_relative 'passenger_wagon'
+require_relative 'cargo_wagon'
 
 class Train
   include InstanceCounter
@@ -73,6 +75,17 @@ class Train
 
   def delete_wagon(wagon)
     @wagons.delete(wagon)
+  end
+
+  def show_wagons
+    @wagons.each_with_index do |_wagon, _index|
+      if type == 'passenger'
+        puts "Wagon #{_index + 1} has #{_wagon.free_seats} free seats and #{_wagon.taken_seats} taken seats"
+      end
+      if type == 'cargo'
+        puts "Wagon #{_index + 1} has #{_wagon.free_volume} free volume and #{_wagon.occupied_volume} taken volume"
+      end
+    end
   end
 
   def add_route(route)
