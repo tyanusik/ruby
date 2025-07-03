@@ -11,8 +11,8 @@ class Train
   attr_accessor :speed, :number
   attr_reader :type, :wagons
 
-  TYPE_FORMAT = /^\D$/
-  NUMBER_FORMAT = /^[a-zа-яё\d]{3}(-?)[a-zа-яё\d]{2}$/i
+  TYPE_FORMAT = /^\D$/.freeze
+  NUMBER_FORMAT = /^[a-zа-яё\d]{3}(-?)[a-zа-яё\d]{2}$/i.freeze
 
   class << self
     attr_accessor :trains
@@ -80,10 +80,10 @@ class Train
   def show_wagons
     @wagons.each do |wagon|
       if type == 'passenger'
-        puts "Passenger wagon #{@wagon_number} has #{wagon.free_seats} free seats and #{_wagon.taken_seats} taken seats"
+        puts "Passenger wagon #{@wagon_number} has #{wagon.free_seats} free seats and #{wagon.taken_seats} taken seats"
       end
       if type == 'cargo'
-        puts "Cargo wagon #{@wagon_number} has #{wagon.free_volume} free volume and #{_wagon.occupied_volume} taken volume"
+        puts "Cargo wagon #{@wagon_number} has #{wagon.free_volume} free volume and #{wagon.occupied_volume} taken volume"
       end
     end
   end

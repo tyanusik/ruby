@@ -158,11 +158,11 @@ loop do
 
       if input == 1
         if train.type == 'passenger'
-          wagon = PassengerWagon.new(train.type, train.company_name, wagon.seats_number)
+          wagon = PassengerWagon.new(train.type, train.company, wagon.seats_number)
           train.add_wagon(wagon)
           puts "Wagon with #{free_seats} seats is created"
         elsif train.type == 'cargo'
-          wagon = CargoWagon.new(train.type, train.company_name, wagon.volume)
+          wagon = CargoWagon.new(train.type, train.company, wagon.volume)
           train.add_wagon(wagon)
           puts "Wagon with #{free_volume} volume is created"
         end

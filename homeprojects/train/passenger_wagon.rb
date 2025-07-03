@@ -3,8 +3,8 @@
 require_relative 'wagon'
 
 class PassengerWagon < Wagon
-  def initialize(type, company, seats_number)
-    super(type, company)
+  def initialize(seats_number)
+    super
     @seats_number = seats_number
     @taken_seats = 0
   end
