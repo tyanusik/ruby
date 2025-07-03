@@ -8,6 +8,7 @@ require_relative 'cargo_train'
 require_relative 'wagon'
 require_relative 'cargo_wagon'
 require_relative 'passenger_wagon'
+require_relative 'modules/company'
 
 def list_with_index(array)
   array.each_with_index { |item, index| puts "#{index + 1}. #{block_given? ? yield(item) : item}" }
@@ -41,8 +42,14 @@ loop do
       stations << Station.new(name)
       puts "Station #{name} is added"
     elsif input == 2
-      puts 'Stations:'
-      list_with_index(stations, &:name)
+      stations.each do |station|
+        puts "Station #{station.name}"
+        stations.trains.each do |_train|
+          # puts "Train #{train.number}, it's type is #{trains.type} and has #{trains.wagons} wagons"
+          stations.current_trains
+          trains.wagons.each { |_wagon| trains.show_wagons }
+        end
+      end
     end
 
   when 2
@@ -145,19 +152,32 @@ loop do
       train = choose_from(trains)
       puts '1) Add a wagon'
       puts '2) Delete a wagon'
+      puts '3) Select a wagon'
+      puts '4) Show all wagons'
       input = gets.chomp.to_i
 
       if input == 1
         if train.type == 'passenger'
-          wagon = PassengerWagon.new(train.type, train.company)
+          wagon = PassengerWagon.new(train.type, train.company_name, wagon.seats_number)
           train.add_wagon(wagon)
+          puts "Wagon with #{free_seats} seats is created"
         elsif train.type == 'cargo'
-          wagon = CargoWagon.new(train.type, train.company)
+          wagon = CargoWagon.new(train.type, train.company_name, wagon.volume)
           train.add_wagon(wagon)
+          puts "Wagon with #{free_volume} volume is created"
         end
-      elsif input == 2
-        train.delete_wagon(wagon)
       end
+
+      train.delete_wagon(wagon) if input == 2
+
+      if input == 3
+        puts 'Select a wagon from the list'
+        choose_from(train.show_wagons)
+        puts 'Enter the number of the wagon'
+        gets.chomp.to_i
+
+      end
+      train.show_wagons if input == 4
 
     when 4
       puts 'Select a train:'

@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative 'modules/company'
+
 class CargoWagon < Wagon
-  def initialize(volume)
-    super
+  include Company
+
+  def initialize(type, company, volume)
+    super(type, company)
     @volume = volume
     @taken_volume = 0
   end

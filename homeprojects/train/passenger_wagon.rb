@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'wagon'
+
 class PassengerWagon < Wagon
-  def initialize(seats_number)
-    super
+  def initialize(type, company, seats_number)
+    super(type, company)
     @seats_number = seats_number
     @taken_seats = 0
   end

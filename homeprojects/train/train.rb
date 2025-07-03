@@ -24,8 +24,7 @@ class Train
     @number = number.to_s
     @type = type
     @wagons = []
-    pp self.class.trains
-    self.class.trains << self
+    @wagon_number = 0
     super
     self.company_name = company
     valid?
@@ -70,6 +69,7 @@ class Train
   end
 
   def add_wagon(wagon)
+    @wagon_number += 1
     @wagons.push(wagon)
   end
 
@@ -78,12 +78,12 @@ class Train
   end
 
   def show_wagons
-    @wagons.each_with_index do |_wagon, _index|
+    @wagons.each do |wagon|
       if type == 'passenger'
-        puts "Wagon #{_index + 1} has #{_wagon.free_seats} free seats and #{_wagon.taken_seats} taken seats"
+        puts "Passenger wagon #{@wagon_number} has #{wagon.free_seats} free seats and #{_wagon.taken_seats} taken seats"
       end
       if type == 'cargo'
-        puts "Wagon #{_index + 1} has #{_wagon.free_volume} free volume and #{_wagon.occupied_volume} taken volume"
+        puts "Cargo wagon #{@wagon_number} has #{wagon.free_volume} free volume and #{_wagon.occupied_volume} taken volume"
       end
     end
   end
