@@ -23,6 +23,7 @@ end
 stations = []
 trains = []
 routes = []
+wagons = []
 
 loop do
   puts "\nMain Menu:"
@@ -154,22 +155,26 @@ loop do
       puts '2) Delete a wagon'
       puts '3) Select a wagon'
       puts '4) Show all wagons'
+      puts '5) Occupy a seats/volume of the wagon'
       input = gets.chomp.to_i
 
       if input == 1
         puts 'Enter the wagon number'
         wagon_number = gets.chomp.to_i
-        if train.type == 'passenger'
+        if wagon_number.nil?
+          puts 'Wagon number can not be nil '
+        elsif train.type == 'passenger'
           puts 'Enter the number of seats in the wagon'
           wagon_seats = gets.chomp.to_i
-          wagon = PassengerWagon.new(wagon_number, train.type, train.company, wagon_seats)
+          wagons << wagon = PassengerWagon.new(wagon_number, train.type, train.company, wagon_seats)
           train.add_wagon(wagon)
           puts "Wagon with #{wagon_seats} seats is created"
         elsif train.type == 'cargo'
           puts 'Enter the volume of the wagon'
           wagon_volume = gets.chomp.to_i
-          wagon = CargoWagon.new(wagon_number, train.type, train.company, wagon_volume)
+          wagons << wagon = CargoWagon.new(wagon_number, train.type, train.company, wagon_volume)
           train.add_wagon(wagon)
+          puts wagon.class
           puts "Wagon with #{wagon_volume} volume is created"
         end
       end
@@ -179,9 +184,23 @@ loop do
       if input == 3
         puts 'Select a wagon from the list'
         choose_from(train.show_wagons)
-
       end
+
       train.show_wagons if input == 4
+
+      if input == 5
+        puts 'Select a wagon from the list'
+        wagon = choose_from(train.show_wagons)
+        if wagon.nil?
+          puts 'Answer can not be nil '
+        elsif train.type == 'passenger'
+          wagon.occupy_seat
+        elsif train.type == 'cargo'
+          puts 'Enter the needed volume of the wagon'
+          needed_volume = gets.chomp.to_i
+          wagon.occupy_volume(needed_volume)
+        end
+      end
 
     when 4
       puts 'Select a train:'
