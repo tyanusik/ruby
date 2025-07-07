@@ -157,14 +157,20 @@ loop do
       input = gets.chomp.to_i
 
       if input == 1
+        puts 'Enter the wagon number'
+        wagon_number = gets.chomp.to_i
         if train.type == 'passenger'
-          wagon = PassengerWagon.new(train.type, train.company, wagon.seats_number)
+          puts 'Enter the number of seats in the wagon'
+          wagon_seats = gets.chomp.to_i
+          wagon = PassengerWagon.new(wagon_number, train.type, train.company, wagon_seats)
           train.add_wagon(wagon)
-          puts "Wagon with #{free_seats} seats is created"
+          puts "Wagon with #{wagon_seats} seats is created"
         elsif train.type == 'cargo'
-          wagon = CargoWagon.new(train.type, train.company, wagon.volume)
+          puts 'Enter the volume of the wagon'
+          wagon_volume = gets.chomp.to_i
+          wagon = CargoWagon.new(wagon_number, train.type, train.company, wagon_volume)
           train.add_wagon(wagon)
-          puts "Wagon with #{free_volume} volume is created"
+          puts "Wagon with #{wagon_volume} volume is created"
         end
       end
 
@@ -173,8 +179,6 @@ loop do
       if input == 3
         puts 'Select a wagon from the list'
         choose_from(train.show_wagons)
-        puts 'Enter the number of the wagon'
-        gets.chomp.to_i
 
       end
       train.show_wagons if input == 4

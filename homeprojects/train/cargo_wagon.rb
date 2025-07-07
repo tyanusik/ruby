@@ -5,7 +5,7 @@ require_relative 'modules/company'
 class CargoWagon < Wagon
   include Company
 
-  def initialize(volume)
+  def initialize(number, type, company, volume)
     super
     @volume = volume
     @taken_volume = 0
