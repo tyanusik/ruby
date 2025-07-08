@@ -2,12 +2,17 @@
 
 require_relative 'modules/instance_counter'
 require_relative 'modules/company'
+require_relative 'metaprogramming/validation'
+require_relative 'metaprogramming/accessors'
 require_relative 'passenger_wagon'
 require_relative 'cargo_wagon'
 
 class Train
   include InstanceCounter
   include Company
+  include Validation
+  extend Accessors
+
   attr_accessor :speed, :number
   attr_reader :type, :wagons
 
@@ -30,19 +35,19 @@ class Train
     valid?
   end
 
-  def validate!
-    raise "Number can't be nil" if number.nil?
-    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
-    raise "Type can't be nil" if type.nil?
-
-    true
-  end
-
-  def valid?
-    validate!
-  rescue StandardError
-    false
-  end
+  # def validate!
+  #   raise "Number can't be nil" if number.nil?
+  #   raise 'Number has invalid format' if number !~ NUMBER_FORMAT
+  #   raise "Type can't be nil" if type.nil?
+  #
+  #   true
+  # end
+  #
+  # def valid?
+  #   validate!
+  # rescue StandardError
+  #   false
+  # end
 
   def self.find(number)
     trains.find { |train| train.number == number }

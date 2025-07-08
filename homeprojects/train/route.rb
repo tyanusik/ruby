@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require_relative 'modules/instance_counter'
+require_relative 'metaprogramming/validation'
 
 class Route
   include InstanceCounter
+  include Validation
+
   attr_reader :first_station, :last_station, :stations
   attr_accessor :number
 
@@ -16,18 +19,18 @@ class Route
     valid?
   end
 
-  def validate!
-    raise "Number can't be nil" if number.nil?
-    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
-    raise "Station name can't be nil" if first_station.nil?
-    raise "Station name can't be nil" if last_station.nil?
-
-    true
-  end
-
-  def valid?
-    validate!
-  end
+  # def validate!
+  #   raise "Number can't be nil" if number.nil?
+  #   raise 'Number has invalid format' if number !~ NUMBER_FORMAT
+  #   raise "Station name can't be nil" if first_station.nil?
+  #   raise "Station name can't be nil" if last_station.nil?
+  #
+  #   true
+  # end
+  #
+  # def valid?
+  #   validate!
+  # end
 
   def add_station(station)
     @stations.insert(-2, station)

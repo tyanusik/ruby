@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require_relative 'modules/instance_counter'
+require_relative 'metaprogramming/validation'
 
 class Station
   include InstanceCounter
+  include Validation
+  extend Accessors
 
   attr_reader :trains
   attr_accessor :name
@@ -17,16 +20,16 @@ class Station
     valid?
   end
 
-  def validate!
-    raise "Station name can't be nil" if name.nil?
-    raise 'Station name has invalid format' if name !~ NAME_FORMAT
-
-    true
-  end
-
-  def valid?
-    validate!
-  end
+  # def validate!
+  #   raise "Station name can't be nil" if name.nil?
+  #   raise 'Station name has invalid format' if name !~ NAME_FORMAT
+  #
+  #   true
+  # end
+  #
+  # def valid?
+  #   validate!
+  # end
 
   def self.all
     @stations.each { |station| puts station }
