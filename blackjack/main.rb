@@ -84,14 +84,20 @@ loop do
         puts 'Dealer win!'
       end
     else
-      puts 'There is only 3 options'
-    end
-
-    puts 'Dealer turn'
-    dealer_score = dealer_turn(dealer_hand, shuffled_deck)
-    if dealer_score <= 21 && dealer_score > user_points
-      puts "You are defeated. Dealer wins with #{dealer_score}."
+      puts ' '
+      puts 'Dealer turn'
+      dealer_score = dealer_turn(dealer_hand, shuffled_deck)
+      if dealer_score <= 21 && dealer_score > user_points
+        puts "You are defeated. Dealer wins with #{dealer_score}."
+        break
+      end
       break
     end
+
+    puts 'Your bet is 10$'
+    dealer_bank -= 10
+    user.bank -= 10
+
+    open_cards(user_hand, dealer_hand, user_points, dealer_points, dealer_bank) if dealer_cards == 3 && user_hand == 3
   end
 end
