@@ -35,6 +35,9 @@ loop do
   puts 'Dealer: We can start the game'
   user_hand = shuffled_deck.pop(2)
   dealer_hand = shuffled_deck.pop(2)
+  dealer_cards = 2
+
+  puts ' '
 
   user_points = points_count(user_hand)
   dealer_points = points_count(dealer_hand)
