@@ -62,9 +62,9 @@ loop do
     input = gets.chomp.to_i
     case input
     when 1
-      dealer_score = dealer_turn(dealer_hand, shuffled_deck)
-      puts "Dealers score is #{dealer_score}"
-      puts "You are defeated. Dealer wins with #{dealer_score}." if user_points < dealer_score && dealer_score <= 21
+      puts 'Dealer turn'
+      dealer_turn(dealer_hand, shuffled_deck)
+
     when 2
       if user.cards == 2
         additional_card = shuffled_deck.pop(1)
