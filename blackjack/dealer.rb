@@ -1,11 +1,14 @@
-# class Dealer
-#   def initialize()
-#     @bank = 100
-#     @cards = 2
-#   end
-#
-#   def pass(points)
-#     if points >= 17
-#   end
-#
-# end
+def dealer_turn(hand, deck)
+  points = points_count(hand)
+  cards = 2
+
+  if points >= 17
+    puts 'Users turn'
+    points
+  elsif points < 17 && cards == 2
+    additional_card = deck.pop(1)
+    hand << additional_card
+    puts 'Dealer took a card'
+    points
+  end
+end

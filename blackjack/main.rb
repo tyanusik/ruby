@@ -1,4 +1,5 @@
 require_relative 'user'
+require_relative 'dealer'
 
 def shuffled_deck
   suits = %w[♠ ♥ ♦ ♣]
@@ -14,29 +15,14 @@ def points_count(hand)
   hand.each do |card|
     value = card[0..-2]
     case value
+    when '2', '3', '4', '5', '6', '7', '8', '9', '10' then points += value.to_i
     when 'J', 'Q', 'K' then points += 10
-    when 'A'
+    else
       points += 11 if points <= 10
       points += 1 if points > 10
-    else
-      points += value.to_i
     end
   end
-end
-
-def dealer_turn(hand, shuffled_deck)
-  loop do
-    hand = shuffled_deck.pop(2)
-    dealer_points = points_count(hand)
-
-    if dealer_points < 17
-      additional_card = shuffled_deck.pop(1)
-      hand + additional_card
-    elsif dealer_points >= 17
-      break
-    end
-    points_count(hand)
-  end
+  points
 end
 
 loop do
@@ -53,11 +39,11 @@ loop do
   user_points = points_count(user_hand)
   dealer_points = points_count(dealer_hand)
   puts "Your cards: #{user_hand}. Your bank score: #{user.bank}. Your points: #{user_points}"
-  puts "Dealer's cards : ** **. Dealer's bank score: #{dealer_bank}"
+  puts "Dealer's cards : #{dealer_hand}. Dealer's bank score: #{dealer_bank}. Dealer's points #{dealer_points}"
 
   puts 'Your bet is 10$'
-  bet = user.bank - 10
-  puts "Now your bank score is #{bet}"
+  user.bank -= 10
+  puts "Now your bank score is #{user.bank}"
 
   dealer_bank -= 10
 
@@ -73,10 +59,13 @@ loop do
   input = gets.chomp.to_i
   case input
   when 1
+    dealer_score = dealer_turn(dealer_hand, shuffled_deck)
+    puts "Dealers score is #{dealer_score}"
+    puts "You are defeated. Dealer wins with #{dealer_score}." if user_points < dealer_score && dealer_score <= 21
   when 2
     if user.cards == 2
-      additional_card = shuffled_deck.pop
-      user_hand += additional_card
+      additional_card = shuffled_deck.pop(1)
+      user_hand << additional_card
       user.cards += 1
     end
     puts "Your cards: #{user_hand}. Your bank score: #{user.bank}. Your points: #{user_points}"
