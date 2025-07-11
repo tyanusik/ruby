@@ -17,26 +17,27 @@ def cards_on_hand(u_hand, u_bank, u_points, d_bank, g_bank)
   puts "Game bank is #{g_bank}"
 end
 
-def open_cards(u_hand, u_bank, d_hand, u_points, d_points, g_bank, b)
+def open_cards(u_hand, u_bank, u_points, d_hand, d_bank, d_points, g_bank, b)
   puts "Your cards: #{u_hand}. Your bank score: #{u_bank}. Your points: #{u_points}"
   puts "Dealer's cards : #{d_hand}. Dealer's points: #{d_points}"
-  if u_points > d_points && u_points < 22
-    puts 'You win!'
+  if d_points > 21 || u_points > d_points && u_points < 22
+    puts "You win!\n\n"
     u_bank += g_bank
     puts "Take whole bank. Now you have #{u_bank}$"
-  elsif u_points < d_points
-    puts 'Dealer win!'
-    dealer_bank += g_bank
-    puts "Dealer take whole bank. Now dealers bank is #{dealer_bank}\n\n"
+
+  elsif u_points < d_points || u_points > 21 && d_points < 22
+    puts "Dealer win!\n\n"
+    d_bank += g_bank
+    puts "Dealer takes whole bank. Now dealers bank is #{d_bank}\n\n"
   elsif u_points == d_points
     puts "It is a draw!\n\n"
     u_bank += b
     d_bank += b
-    g_bank -= 2 * b
+    g_bank = 2 * b + g_bank
     puts "Your bets are refunded\n\n"
     puts "Now Users bank is #{u_bank}"
     puts "Now Dealers bank is #{d_bank}"
-    puts "Game bank is #{g_bank}"
+    puts "Game bank is #{g_bank}\n\n"
   end
 end
 

@@ -21,17 +21,23 @@ loop do
 
   cards_on_hand(user_hand, user.bank, user_points, dealer_bank, game_bank)
 
-  puts "Your bet is 10$\n\n"
-
-  user.bank -= bet
-  dealer_bank -= bet
-
-  game_bank += 2 * bet
-  puts "Now game bank is #{game_bank}\n\n"
-
-  cards_on_hand(user_hand, user.bank, user_points, dealer_bank, game_bank)
+  # puts "Your bet is 10$\n\n"
+  #
+  # user.bank -= bet
+  # dealer_bank -= bet
+  #
+  # game_bank = 2 * bet + game_bank
+  # puts "Now game bank is #{game_bank}\n\n"
+  #
+  # cards_on_hand(user_hand, user.bank, user_points, dealer_bank, game_bank)
 
   loop do
+    puts "Your bet is 10$\n\n"
+    dealer_bank -= bet
+    user.bank -= bet
+    game_bank = 2 * bet + game_bank
+    puts "Now game bank is #{game_bank}\n\n"
+
     puts "User turn \n\n"
     cards_on_hand(user_hand, user.bank, user_points, dealer_bank, game_bank)
 
@@ -58,16 +64,18 @@ loop do
 
       dealer_turn(dealer_hand, shuffled_deck)
     when 3
-      open_cards(user_hand, dealer_hand, user_points, dealer_points, dealer_bank, game_bank, bet)
+      open_cards(user_hand, user.bank, user_points, dealer_hand, dealer_bank, dealer_points, game_bank, bet)
+      puts "Do you want to play again?\n\n"
+      answer = gets.chomp
+      break unless answer == 'no'
     end
 
-    puts "Your bet is 10$\n\n"
-    dealer_bank -= bet
-    user.bank -= bet
+    next unless dealer_cards == 3 && user.cards == 3
 
-    if dealer_cards == 3 && user.cards == 3
-      open_cards(user_hand, dealer_hand, user_points, dealer_points, dealer_bank, game_bank,
-                 bet)
-    end
+    puts 'ASS'
+    open_cards(user_hand, user.bank, user_points, dealer_hand, dealer_bank, dealer_points, game_bank, bet)
+    puts "Do you want to play again?\n\n"
+    answer = gets.chomp
+    break unless answer == 'no'
   end
 end
