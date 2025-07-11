@@ -6,6 +6,4 @@ class User
     @bank = 100
     @cards = 2
   end
-
-  def user_turn(hand, deck); end
 end

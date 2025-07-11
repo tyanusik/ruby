@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'user'
 
 def shuffled_deck
@@ -9,24 +11,32 @@ def shuffled_deck
   deck.shuffle
 end
 
-def add_card(_hand)
-  return unless user.cards == 2
-
-  additional_card = shuffled_deck.pop(1)
-  user_hand += additional_card
-  user.cards += 1
-  points_count(user_hand)
+def cards_on_hand(u_hand, u_bank, u_points, d_bank, g_bank)
+  puts "Your cards: #{u_hand}. Your bank score: #{u_bank}. Your points: #{u_points}"
+  puts "Dealer's cards : ** **. Dealer's bank score: #{d_bank}.\n\n"
+  puts "Game bank is #{g_bank}"
 end
 
-def open_cards(u_hand, d_hand, u_points, d_points, d_bank)
-  puts "Your cards: #{u_hand}. Your bank score: #{user.bank}. Your points: #{u_points}"
-  puts "Dealer's cards : #{d_hand}. Dealer's bank score: #{d_bank}. Dealer's points: #{d_points}"
-  if u_points > d_points && u_points <= 21
+def open_cards(u_hand, u_bank, d_hand, u_points, d_points, g_bank, b)
+  puts "Your cards: #{u_hand}. Your bank score: #{u_bank}. Your points: #{u_points}"
+  puts "Dealer's cards : #{d_hand}. Dealer's points: #{d_points}"
+  if u_points > d_points && u_points < 22
     puts 'You win!'
-    break
-  elsif u_points == 21
+    u_bank += g_bank
+    puts "Take whole bank. Now you have #{u_bank}$"
+  elsif u_points < d_points
     puts 'Dealer win!'
-    break
+    dealer_bank += g_bank
+    puts "Dealer take whole bank. Now dealers bank is #{dealer_bank}\n\n"
+  elsif u_points == d_points
+    puts "It is a draw!\n\n"
+    u_bank += b
+    d_bank += b
+    g_bank -= 2 * b
+    puts "Your bets are refunded\n\n"
+    puts "Now Users bank is #{u_bank}"
+    puts "Now Dealers bank is #{d_bank}"
+    puts "Game bank is #{g_bank}"
   end
 end
 
@@ -38,7 +48,7 @@ def points_count(hand)
     when '2', '3', '4', '5', '6', '7', '8', '9', '10' then points += value.to_i
     when 'J', 'Q', 'K' then points += 10
     when 'A'
-      points += 11 if points <= 10
+      points += 11 if points < 11
       points += 1 if points > 10
     else
       # type code here
