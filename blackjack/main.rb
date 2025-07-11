@@ -78,4 +78,8 @@ loop do
     answer = gets.chomp
     break unless answer == 'no'
   end
+
+  puts "Do you want to play again?\n\n"
+  answer = gets.chomp
+  break unless answer == 'yes'
 end
