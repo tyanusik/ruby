@@ -2,7 +2,6 @@ def dealer_turn(hand, deck)
   points = points_count(hand)
   cards = hand.size
   puts "Dealer turn\n\n"
-
   puts "You can't take a card. You already have 3\n\n" if cards == 3
 
   if points < 17 && cards < 3

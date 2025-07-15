@@ -57,3 +57,7 @@ def points_count(hand)
   end
   points
 end
+
+def hand_full?(hand)
+  hand.size == 3
+end

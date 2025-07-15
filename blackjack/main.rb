@@ -14,7 +14,7 @@ loop do
   puts "Dealer: We can start the game\n\n"
   user_hand = shuffled_deck.pop(2)
   dealer_hand = shuffled_deck.pop(2)
-  dealer_cards = dealer_hand.size
+  dealer_hand.size
 
   user_points = points_count(user_hand)
   dealer_points = points_count(dealer_hand)
@@ -40,6 +40,11 @@ loop do
     when 1
       dealer_turn(dealer_hand, shuffled_deck)
 
+      if hand_full?(dealer_hand) && hand_full?(user_hand)
+        open_cards(user_hand, user.bank, user_points, dealer_hand, dealer_bank, dealer_points, game_bank, bet)
+        break
+      end
+
     when 2
       if user.cards == 2
         additional_card = shuffled_deck.pop(1)
@@ -53,21 +58,19 @@ loop do
       puts "Your cards: #{user_hand}. Your bank score: #{user.bank}. Your points: #{user_points}\n\n"
 
       dealer_turn(dealer_hand, shuffled_deck)
+
+      if hand_full?(dealer_hand) && hand_full?(user_hand)
+        open_cards(user_hand, user.bank, user_points, dealer_hand, dealer_bank, dealer_points, game_bank, bet)
+        break
+      end
+
     when 3
       open_cards(user_hand, user.bank, user_points, dealer_hand, dealer_bank, dealer_points, game_bank, bet)
-      # puts 'Do you want to play again?'
-      # input = gets.chomp
-      # break unless input == 'no'
-
       break
 
-    end
-
-    if dealer_cards == 3 && user.cards == 3
-      open_cards(user_hand, user.bank, user_points, dealer_hand, dealer_bank, dealer_points, game_bank, bet)
-      break
     end
   end
+
   puts "Do you want to play again?\n\n"
   answer = gets.chomp
   break if answer == 'no'
