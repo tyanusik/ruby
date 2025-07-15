@@ -19,11 +19,11 @@ end
 
 def open_cards(u_hand, u_bank, u_points, d_hand, d_bank, d_points, g_bank, b)
   puts "Your cards: #{u_hand}. Your bank score: #{u_bank}. Your points: #{u_points}"
-  puts "Dealer's cards : #{d_hand}. Dealer's points: #{d_points}"
+  puts "Dealer's cards : #{d_hand}. Dealer's points: #{d_points}\n\n"
   if d_points > 21 || u_points > d_points && u_points < 22
     puts "You win!\n\n"
     u_bank += g_bank
-    puts "Take whole bank. Now you have #{u_bank}$"
+    puts "Take whole bank. Now you have #{u_bank}$\n\n"
 
   elsif u_points < d_points || u_points > 21 && d_points < 22
     puts "Dealer win!\n\n"
